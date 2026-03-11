@@ -380,6 +380,19 @@
                 </svg>
                 Riwayat Transaksi
             </a>
+
+            <p style="font-size:10px;font-weight:600;letter-spacing:0.15em;color:var(--text-dim);padding:16px 20px 8px;text-transform:uppercase;">
+                Akun
+            </p>
+            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                @csrf
+                <button type="submit" class="nav-item" style="width: 100%; text-align: left; background: none; border: none; border-left: 2px solid transparent; cursor: pointer; color: var(--text-muted); padding: 8px 12px; font-size: 13px; font-weight: 500;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                    </svg>
+                    Logout
+                </button>
+            </form>
         </nav>
 
         {{-- Sidebar footer --}}
