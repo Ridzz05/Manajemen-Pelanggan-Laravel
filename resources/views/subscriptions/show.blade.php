@@ -38,15 +38,14 @@
             <div style="height:1px;background:#111;"></div>
 
             {{-- Metadata grid --}}
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+            <div class="r-form-grid" style="grid-template-columns:repeat(3,1fr);">
                 <div>
                     <p style="font-size:10px;color:#333;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:5px;">Proyek</p>
                     <p style="font-size:13px;color:#bbb;">{{ $subscription->customer->project_name }}</p>
                 </div>
                 <div>
-                    <p style="font-size:10px;color:#333;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:5px;">Paket</p>
-                    <p style="font-size:13px;color:#bbb;">{{ $subscription->servicePackage->name }}</p>
-                    <p style="font-size:11px;color:#444;font-family:'JetBrains Mono',monospace;">Rp {{ number_format($subscription->servicePackage->price, 0, ',', '.') }}</p>
+                    <p style="font-size:10px;color:#333;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:5px;">Kategori</p>
+                    <p style="font-size:13px;color:#bbb;">{{ $subscription->category->name ?? '-' }}</p>
                 </div>
                 <div>
                     <p style="font-size:10px;color:#333;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:5px;">Sisa Waktu</p>

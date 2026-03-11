@@ -13,7 +13,7 @@
         <form method="POST" action="{{ route('subscriptions.store') }}" style="padding:20px;display:flex;flex-direction:column;gap:16px;">
             @csrf
 
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="r-form-grid">
                 {{-- Pelanggan --}}
                 <div>
                     <label style="display:block;font-size:10px;color:#555;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">
@@ -30,20 +30,20 @@
                     @error('customer_id') <p style="font-size:11px;color:#666;margin-top:4px;font-family:'JetBrains Mono',monospace;">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Paket --}}
+                {{-- Kategori --}}
                 <div>
                     <label style="display:block;font-size:10px;color:#555;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">
-                        Paket Layanan *
+                        Kategori *
                     </label>
-                    <select name="service_package_id" required style="width:100%;padding:9px 12px;font-size:12px;">
-                        <option value="">-- pilih paket --</option>
-                        @foreach($packages as $pkg)
-                            <option value="{{ $pkg->id }}" {{ old('service_package_id')==$pkg->id ? 'selected':'' }}>
-                                {{ $pkg->name }} — Rp {{ number_format($pkg->price, 0, ',', '.') }}
+                    <select name="category_id" required style="width:100%;padding:9px 12px;font-size:12px;">
+                        <option value="">-- pilih kategori --</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ old('category_id')==$cat->id ? 'selected':'' }}>
+                                {{ $cat->name }}
                             </option>
                         @endforeach
                     </select>
-                    @error('service_package_id') <p style="font-size:11px;color:#666;margin-top:4px;font-family:'JetBrains Mono',monospace;">{{ $message }}</p> @enderror
+                    @error('category_id') <p style="font-size:11px;color:#666;margin-top:4px;font-family:'JetBrains Mono',monospace;">{{ $message }}</p> @enderror
                 </div>
 
                 {{-- Start Date --}}

@@ -6,24 +6,29 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ServicePackage extends Model
+class Category extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'price',
-        'description',
         'is_active',
     ];
 
     protected $casts = [
-        'price'     => 'decimal:2',
         'is_active' => 'boolean',
     ];
 
     /**
-     * A service package can belong to many subscriptions.
+     * A category can have many products.
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * A category can belong to many subscriptions.
      */
     public function subscriptions(): HasMany
     {
@@ -31,10 +36,10 @@ class ServicePackage extends Model
     }
 
     /**
-     * Helper: format price as Rupiah.
+     * Active products count.
      */
-    public function getFormattedPriceAttribute(): string
+    public function activeProducts(): HasMany
     {
-        return 'Rp ' . number_format($this->price, 0, ',', '.');
+        return $this->hasMany(Product::class)->where('is_active', true);
     }
 }

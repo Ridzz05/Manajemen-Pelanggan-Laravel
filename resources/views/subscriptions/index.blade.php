@@ -9,7 +9,7 @@
      x-data="{ showRenewModal:false, renewId:null, renewName:'' }">
 
     {{-- ── Stat Bar ──────────────────────────────────────────────── --}}
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1a1a1a;border:1px solid #1a1a1a;">
+    <div class="r-grid-stats" style="background:#1a1a1a;border:1px solid #1a1a1a;">
         @foreach([
             ['label'=>'TOTAL',    'val'=>$stats['total'],         'dim'=>false],
             ['label'=>'AKTIF',    'val'=>$stats['active'],        'dim'=>false],
@@ -24,7 +24,7 @@
     </div>
 
     {{-- ── Toolbar ──────────────────────────────────────────────── --}}
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+    <div class="r-flex-toolbar" style="flex-wrap:wrap;">
         <form method="GET" action="{{ route('subscriptions.index') }}"
               style="display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;">
 
@@ -72,13 +72,13 @@
     </div>
 
     {{-- ── Table ──────────────────────────────────────────────────── --}}
-    <div style="border:1px solid #1a1a1a;overflow-x:auto;">
+    <div class="r-table-wrap" style="border:1px solid #1a1a1a;">
         <table style="width:100%;border-collapse:collapse;">
             <thead>
                 <tr style="border-bottom:1px solid #1a1a1a;background:#000;">
                     <th style="padding:10px 16px;text-align:left;">#</th>
                     <th style="padding:10px 16px;text-align:left;">Pelanggan</th>
-                    <th style="padding:10px 16px;text-align:left;display:none;" class="md-show">Paket</th>
+                    <th style="padding:10px 16px;text-align:left;display:none;" class="md-show">Kategori</th>
                     <th style="padding:10px 16px;text-align:left;">Mulai</th>
                     <th style="padding:10px 16px;text-align:left;">Berakhir</th>
                     <th style="padding:10px 16px;text-align:left;">Sisa</th>
@@ -109,10 +109,10 @@
                             <p style="font-size:11px;color:#444;margin-top:2px;font-family:'JetBrains Mono',monospace;">{{ $sub->customer->project_name }}</p>
                         </td>
 
-                        {{-- Paket --}}
+                        {{-- Kategori --}}
                         <td style="padding:12px 16px;">
                             <span style="font-size:11px;color:#666;border:1px solid #1a1a1a;padding:2px 8px;font-family:'JetBrains Mono',monospace;">
-                                {{ $sub->servicePackage->name }}
+                                {{ $sub->category->name ?? '-' }}
                             </span>
                         </td>
 

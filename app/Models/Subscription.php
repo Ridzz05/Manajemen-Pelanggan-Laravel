@@ -14,7 +14,7 @@ class Subscription extends Model
 
     protected $fillable = [
         'customer_id',
-        'service_package_id',
+        'category_id',
         'start_date',
         'end_date',
         'status',
@@ -45,9 +45,9 @@ class Subscription extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function servicePackage(): BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(ServicePackage::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function payments(): HasMany

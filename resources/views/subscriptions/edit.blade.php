@@ -16,7 +16,7 @@
               style="padding:20px;display:flex;flex-direction:column;gap:16px;">
             @csrf @method('PUT')
 
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="r-form-grid">
                 {{-- Pelanggan --}}
                 <div>
                     <label style="display:block;font-size:10px;color:#555;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">Pelanggan *</label>
@@ -29,13 +29,13 @@
                     </select>
                 </div>
 
-                {{-- Paket --}}
+                {{-- Kategori --}}
                 <div>
-                    <label style="display:block;font-size:10px;color:#555;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">Paket *</label>
-                    <select name="service_package_id" required style="width:100%;padding:9px 12px;font-size:12px;">
-                        @foreach($packages as $pkg)
-                            <option value="{{ $pkg->id }}" {{ old('service_package_id',$subscription->service_package_id)==$pkg->id ? 'selected':'' }}>
-                                {{ $pkg->name }} — Rp {{ number_format($pkg->price, 0, ',', '.') }}
+                    <label style="display:block;font-size:10px;color:#555;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">Kategori *</label>
+                    <select name="category_id" required style="width:100%;padding:9px 12px;font-size:12px;">
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ old('category_id',$subscription->category_id)==$cat->id ? 'selected':'' }}>
+                                {{ $cat->name }}
                             </option>
                         @endforeach
                     </select>
