@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->foreignId('service_package_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customer_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('service_package_id')->nullable()->constrained()->onDelete('set null');
             $table->date('start_date');
             $table->date('end_date');
             $table->enum('status', ['active', 'expired', 'cancelled'])->default('active');

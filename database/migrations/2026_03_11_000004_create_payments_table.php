@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id')->constrained()->onDelete('cascade');
+            $table->foreignId('subscription_id')->nullable()->constrained()->onDelete('set null');
             $table->decimal('amount', 12, 2);
             $table->enum('payment_method', ['QRIS', 'Transfer Bank', 'Cash', 'Virtual Account', 'E-Wallet'])->default('QRIS');
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');

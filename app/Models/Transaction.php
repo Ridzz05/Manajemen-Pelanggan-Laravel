@@ -83,7 +83,9 @@ class Transaction extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Customer::class)->withDefault([
+            'name' => 'Pelanggan Terhapus',
+        ]);
     }
 
     public function items(): HasMany

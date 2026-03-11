@@ -42,12 +42,16 @@ class Subscription extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Customer::class)->withDefault([
+            'name' => 'Pelanggan Terhapus',
+        ]);
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)->withDefault([
+            'name' => 'Kategori Terhapus',
+        ]);
     }
 
     public function payments(): HasMany
