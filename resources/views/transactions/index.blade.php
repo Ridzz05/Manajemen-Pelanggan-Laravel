@@ -8,83 +8,111 @@
 <div style="display:flex;flex-direction:column;gap:20px;">
 
     {{-- Stats --}}
-    <div class="r-grid-stats" style="background:var(--border);border:1px solid var(--border);">
-        <div style="background:var(--bg-surface);padding:16px 18px;">
-            <p style="font-size:10px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">Total Transaksi</p>
-            <p style="font-size:24px;font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;">{{ number_format($stats['total_transactions']) }}</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;">
+        <div class="nb-card">
+            <div style="background:#000;padding:10px 16px;border-bottom:2.5px solid #000;">
+                <span style="font-size:10px;font-weight:700;color:#FFDD00;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Total Transaksi</span>
+            </div>
+            <div style="padding:14px 18px;">
+                <p style="font-size:30px;font-weight:800;color:#000;font-variant-numeric:tabular-nums;">{{ number_format($stats['total_transactions']) }}</p>
+            </div>
         </div>
-        <div style="background:var(--bg-surface);padding:16px 18px;">
-            <p style="font-size:10px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">Total Revenue</p>
-            <p style="font-size:18px;font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;">Rp {{ number_format($stats['total_revenue'], 0, ',', '.') }}</p>
+        <div class="nb-card" style="background:#FFDD00;">
+            <div style="background:#000;padding:10px 16px;border-bottom:2.5px solid #000;">
+                <span style="font-size:10px;font-weight:700;color:#FFDD00;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Total Revenue</span>
+            </div>
+            <div style="padding:14px 18px;">
+                <p style="font-size:20px;font-weight:800;color:#000;font-variant-numeric:tabular-nums;">Rp {{ number_format($stats['total_revenue'], 0, ',', '.') }}</p>
+            </div>
         </div>
-        <div style="background:var(--bg-surface);padding:16px 18px;">
-            <p style="font-size:10px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">Hari Ini</p>
-            <p style="font-size:24px;font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;">{{ number_format($stats['today_transactions']) }}</p>
+        <div class="nb-card">
+            <div style="background:#0066FF;padding:10px 16px;border-bottom:2.5px solid #000;">
+                <span style="font-size:10px;font-weight:700;color:#fff;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Hari Ini</span>
+            </div>
+            <div style="padding:14px 18px;">
+                <p style="font-size:30px;font-weight:800;color:#000;font-variant-numeric:tabular-nums;">{{ number_format($stats['today_transactions']) }}</p>
+            </div>
         </div>
-        <div style="background:var(--bg-surface);padding:16px 18px;">
-            <p style="font-size:10px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">Revenue Hari Ini</p>
-            <p style="font-size:18px;font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;">Rp {{ number_format($stats['today_revenue'], 0, ',', '.') }}</p>
+        <div class="nb-card">
+            <div style="background:#00FF85;padding:10px 16px;border-bottom:2.5px solid #000;">
+                <span style="font-size:10px;font-weight:700;color:#000;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Rev. Hari Ini</span>
+            </div>
+            <div style="padding:14px 18px;">
+                <p style="font-size:18px;font-weight:800;color:#000;font-variant-numeric:tabular-nums;">Rp {{ number_format($stats['today_revenue'], 0, ',', '.') }}</p>
+            </div>
         </div>
     </div>
 
-    {{-- Search --}}
+    {{-- Search / Filter --}}
     <div class="r-flex-toolbar" style="flex-wrap:wrap;">
-        <form method="GET" style="display:flex;gap:8px;">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari invoice / pelanggan..." style="padding:6px 12px;width:250px;">
-            <select name="status" style="padding:6px 12px;">
+        <form method="GET" style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari invoice / pelanggan..." style="padding:9px 12px;width:220px;">
+            <select name="status" style="padding:9px 12px;">
                 <option value="">Semua Status</option>
-                <option value="paid" {{ request('status') === 'paid' ? 'selected' : '' }}>Lunas</option>
+                <option value="paid"    {{ request('status') === 'paid'    ? 'selected' : '' }}>Lunas</option>
                 <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="failed" {{ request('status') === 'failed' ? 'selected' : '' }}>Gagal</option>
+                <option value="failed"  {{ request('status') === 'failed'  ? 'selected' : '' }}>Gagal</option>
             </select>
-            <button type="submit" class="btn-secondary" style="padding:6px 14px;">Filter</button>
+            <button type="submit" class="btn-nb btn-secondary">Filter</button>
+            @if(request('search') || request('status'))
+                <a href="{{ route('transactions.index') }}" class="btn-nb btn-secondary">✕ Reset</a>
+            @endif
         </form>
     </div>
 
     {{-- Table --}}
-    <div class="r-table-wrap" style="border:1px solid var(--border);background:var(--bg-surface);">
-        <table style="width:100%;border-collapse:collapse;">
-            <thead>
-                <tr style="border-bottom:1px solid var(--border);">
-                    <th style="text-align:left;padding:12px 18px;">Invoice</th>
-                    <th style="text-align:left;padding:12px 18px;">Pelanggan</th>
-                    <th style="text-align:left;padding:12px 18px;">Metode</th>
-                    <th style="text-align:right;padding:12px 18px;">Total</th>
-                    <th style="text-align:center;padding:12px 18px;">Status</th>
-                    <th style="text-align:right;padding:12px 18px;">Tanggal</th>
-                    <th style="text-align:right;padding:12px 18px;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($transactions as $trx)
-                <tr style="border-bottom:1px solid var(--border-dim);">
-                    <td style="padding:12px 18px;font-size:12px;color:var(--text-primary);font-family:'JetBrains Mono',monospace;font-weight:500;">{{ $trx->invoice_number }}</td>
-                    <td style="padding:12px 18px;font-size:13px;color:var(--text-secondary);">{{ $trx->customer->name ?? 'Umum' }}</td>
-                    <td style="padding:12px 18px;font-size:12px;color:var(--text-muted);">{{ $trx->payment_method }}</td>
-                    <td style="padding:12px 18px;text-align:right;font-size:13px;font-weight:600;color:var(--text-primary);font-family:'JetBrains Mono',monospace;">{{ $trx->formatted_grand_total }}</td>
-                    <td style="padding:12px 18px;text-align:center;">
-                        @if($trx->payment_status === 'paid')
-                            <span style="font-size:10px;padding:2px 8px;background:var(--bg-primary);color:var(--text-on-primary);font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:0.05em;">LUNAS</span>
-                        @elseif($trx->payment_status === 'pending')
-                            <span style="font-size:10px;padding:2px 8px;border:1px solid var(--border-mid);color:var(--text-muted);font-family:'JetBrains Mono',monospace;">PENDING</span>
-                        @else
-                            <span style="font-size:10px;padding:2px 8px;border:1px solid var(--border-dim);color:var(--text-dim);font-family:'JetBrains Mono',monospace;">GAGAL</span>
-                        @endif
-                    </td>
-                    <td style="padding:12px 18px;text-align:right;font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">{{ $trx->created_at->format('d.m.Y H:i') }}</td>
-                    <td style="padding:12px 18px;text-align:right;">
-                        <a href="{{ route('transactions.show', $trx) }}" class="btn-secondary" style="padding:4px 12px;">Detail</a>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7" style="padding:40px;text-align:center;font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;">— belum ada transaksi —</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <div class="nb-card">
+        <div class="nb-card-header" style="background:#000;color:#FFDD00;">
+            <span>Riwayat Transaksi Kasir</span>
+        </div>
+        <div class="r-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Invoice</th>
+                        <th>Pelanggan</th>
+                        <th class="r-hide-mobile">Metode</th>
+                        <th style="text-align:right;">Total</th>
+                        <th style="text-align:center;">Status</th>
+                        <th class="r-hide-mobile" style="text-align:right;">Tanggal</th>
+                        <th style="text-align:right;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($transactions as $trx)
+                    <tr>
+                        <td style="font-size:12px;font-family:'Space Mono',monospace;font-weight:700;">{{ $trx->invoice_number }}</td>
+                        <td style="font-weight:600;font-size:13px;">{{ $trx->customer->name ?? 'Umum' }}</td>
+                        <td class="r-hide-mobile" style="font-size:12px;color:#888;font-family:'Space Mono',monospace;">{{ $trx->payment_method }}</td>
+                        <td style="text-align:right;font-weight:800;font-size:13px;font-family:'Space Mono',monospace;white-space:nowrap;">{{ $trx->formatted_grand_total }}</td>
+                        <td style="text-align:center;">
+                            @if($trx->payment_status === 'paid')
+                                <span class="badge badge-success">LUNAS</span>
+                            @elseif($trx->payment_status === 'pending')
+                                <span class="badge badge-warning">PENDING</span>
+                            @else
+                                <span class="badge badge-danger">GAGAL</span>
+                            @endif
+                        </td>
+                        <td class="r-hide-mobile" style="text-align:right;font-size:11px;color:#888;font-family:'Space Mono',monospace;white-space:nowrap;">{{ $trx->created_at->format('d.m.Y H:i') }}</td>
+                        <td style="text-align:right;">
+                            <a href="{{ route('transactions.show', $trx) }}" class="btn-nb btn-secondary" style="padding:5px 10px;font-size:11px;">Detail</a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" style="padding:48px;text-align:center;">
+                            <p style="font-size:14px;color:#aaa;font-weight:600;">Belum ada transaksi</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        <div style="padding:12px 16px;border-top:2px solid #000;background:#FFFBF0;">
+            {{ $transactions->links() }}
+        </div>
     </div>
 
-    {{ $transactions->links() }}
 </div>
 @endsection
