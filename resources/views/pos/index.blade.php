@@ -4,138 +4,550 @@
 @section('page-title', 'Kasir (POS)')
 @section('page-subtitle', 'pos.index')
 
-@section('content')
-<div x-data="posApp()" class="r-grid-pos">
+@push('styles')
+<style>
+    /* POS specific styles — mobile first */
+    .pos-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        height: calc(100vh - 80px);
+        overflow: hidden;
+    }
 
-    {{-- LEFT: Product Grid --}}
-    <div style="display:flex;flex-direction:column;gap:20px;">
+    /* Tab toggle (mobile only) */
+    .pos-tabs {
+        display: flex;
+        border-bottom: 2.5px solid #000;
+        background: #fff;
+        flex-shrink: 0;
+    }
+    .pos-tab {
+        flex: 1;
+        padding: 14px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 800;
+        font-family: 'Space Mono', monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border: none;
+        background: #f5f0dc;
+        color: #666;
+        position: relative;
+        transition: background 0.15s, color 0.15s;
+    }
+    .pos-tab.active {
+        background: #FFDD00;
+        color: #000;
+    }
+    .pos-tab .cart-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 5px;
+        border-radius: 999px;
+        background: #FF3B3B;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+        margin-left: 6px;
+        border: 1.5px solid #000;
+    }
+
+    /* Panels */
+    .pos-panel-products,
+    .pos-panel-cart {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .pos-panel-cart { display: none; }
+    .pos-panel-products.hidden-panel { display: none; }
+    .pos-panel-cart.shown-panel { display: flex; }
+
+    /* Product grid — mobile 2 cols */
+    .pos-product-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 14px;
+        align-content: start;
+    }
+
+    /* Product card */
+    .pos-product-card {
+        border: 2.5px solid #000;
+        background: #fff;
+        cursor: pointer;
+        padding: 10px;
+        box-shadow: 3px 3px 0 #000;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .pos-product-card:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 #000;
+    }
+    .pos-product-card.in-cart { background: #FFDD00; }
+    .pos-product-card .prod-img {
+        width: 100%;
+        height: 56px;
+        overflow: hidden;
+        margin-bottom: 6px;
+        background: #f0ead6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #000;
+    }
+    .pos-product-card .prod-img img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    .pos-product-card .prod-name {
+        font-size: 12px;
+        font-weight: 800;
+        color: #000;
+        line-height: 1.25;
+        margin-bottom: 2px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .pos-product-card .prod-sku {
+        font-size: 9px;
+        font-weight: 700;
+        color: #888;
+        font-family: 'Space Mono', monospace;
+        margin-bottom: 6px;
+    }
+    .pos-product-card .prod-price {
+        font-size: 13px;
+        font-weight: 800;
+        color: #000;
+    }
+    .pos-product-card .prod-stock {
+        font-size: 9px;
+        font-weight: 700;
+        color: #000;
+        font-family: 'Space Mono', monospace;
+        background: #00FF85;
+        display: inline-block;
+        padding: 2px 6px;
+        margin-top: 4px;
+        border: 1.5px solid #000;
+    }
+    .pos-product-card .prod-stock.empty { background: #FF3B3B; color: #fff; }
+
+    /* Search bar */
+    .pos-search {
+        display: flex;
+        gap: 8px;
+        padding: 12px 14px;
+        border-bottom: 2.5px solid #000;
+        background: #fff;
+        flex-shrink: 0;
+    }
+    .pos-search input,
+    .pos-search select {
+        border: 2.5px solid #000 !important;
+        box-shadow: 3px 3px 0 #000 !important;
+        font-family: 'Space Mono', monospace;
+        font-size: 13px !important;
+    }
+
+    /* Cart items */
+    .cart-item {
+        padding: 14px 16px;
+        border-bottom: 2.5px solid #000;
+        background: #FFDD00;
+    }
+    .cart-item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+    .cart-item-name {
+        font-size: 14px;
+        font-weight: 800;
+        color: #000;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 2px;
+    }
+    .cart-item-price-info {
+        font-size: 12px;
+        font-weight: 600;
+        color: #222;
+        font-family: 'Space Mono', monospace;
+    }
+    .cart-rm-btn {
+        background: #FF3B3B;
+        border: 2px solid #000;
+        color: #fff;
+        cursor: pointer;
+        padding: 5px;
+        box-shadow: 2px 2px 0 #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .cart-rm-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+    }
+    .cart-qty-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .cart-qty-group {
+        display: flex;
+        align-items: center;
+        border: 2px solid #000;
+        background: #fff;
+        box-shadow: 2px 2px 0 #000;
+    }
+    .cart-qty-btn {
+        background: none;
+        border: none;
+        color: #000;
+        cursor: pointer;
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cart-qty-btn:first-child { border-right: 2px solid #000; }
+    .cart-qty-btn:last-child { border-left: 2px solid #000; }
+    .cart-qty-val {
+        font-size: 15px;
+        font-weight: 800;
+        color: #000;
+        width: 44px;
+        text-align: center;
+        font-family: 'Space Mono', monospace;
+    }
+    .cart-item-total {
+        font-size: 15px;
+        font-weight: 800;
+        color: #000;
+        font-family: 'Space Mono', monospace;
+        background: #fff;
+        padding: 5px 10px;
+        border: 2px solid #000;
+        box-shadow: 2px 2px 0 #000;
+    }
+
+    /* Cart footer */
+    .cart-footer {
+        border-top: 2.5px solid #000;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: #fff;
+        flex-shrink: 0;
+    }
+    .cart-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .cart-row-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #000;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-family: 'Space Mono', monospace;
+    }
+    .cart-total-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 16px;
+        background: #FFDD00;
+        border: 2.5px solid #000;
+        box-shadow: 4px 4px 0 #000;
+    }
+    .cart-total-label {
+        font-size: 16px;
+        font-weight: 800;
+        color: #000;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .cart-total-val {
+        font-size: 22px;
+        font-weight: 800;
+        color: #000;
+        font-family: 'Space Mono', monospace;
+    }
+    .cart-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .cart-fields label {
+        font-size: 10px;
+        font-weight: 700;
+        color: #000;
+        letter-spacing: 0.06em;
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-family: 'Space Mono', monospace;
+    }
+    .pos-pay-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 16px;
+        font-size: 16px;
+        background: #0066FF;
+        color: #fff;
+        border: 2.5px solid #000;
+        box-shadow: 4px 4px 0 #000;
+        font-weight: 800;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Space Grotesk', sans-serif;
+        transition: box-shadow 0.08s, transform 0.08s;
+    }
+    .pos-pay-btn:hover {
+        box-shadow: 2px 2px 0 #000;
+        transform: translate(2px, 2px);
+    }
+    .pos-pay-btn:active {
+        box-shadow: 0 0 0 #000;
+        transform: translate(4px, 4px);
+    }
+    .pos-pay-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: translate(4px, 4px);
+    }
+
+    /* Empty cart */
+    .cart-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 56px 20px;
+        opacity: 0.4;
+    }
+    .cart-empty i { font-size: 48px; margin-bottom: 12px; }
+    .cart-empty p {
+        font-size: 13px;
+        font-weight: 700;
+        font-family: 'Space Mono', monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    /* ─── Desktop (≥768px) ────────────────────────── */
+    @media (min-width: 768px) {
+        .pos-wrap {
+            flex-direction: row;
+            gap: 0;
+        }
+        .pos-tabs { display: none; }
+        .pos-panel-products,
+        .pos-panel-cart {
+            display: flex !important;
+        }
+        .pos-panel-products {
+            flex: 1;
+            border-right: 2.5px solid #000;
+        }
+        .pos-panel-cart {
+            width: 380px;
+            flex-shrink: 0;
+            max-height: none;
+        }
+        .pos-product-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            padding: 18px;
+        }
+        .pos-product-card .prod-img { height: 90px; }
+        .pos-product-card .prod-name { font-size: 13px; }
+        .pos-search { padding: 14px 18px; gap: 10px; }
+    }
+
+    @media (min-width: 1024px) {
+        .pos-panel-cart { width: 420px; }
+        .pos-product-grid {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            padding: 20px;
+        }
+        .pos-product-card .prod-img { height: 100px; }
+    }
+</style>
+@endpush
+
+@section('content')
+<div x-data="posApp()" class="pos-wrap">
+
+    {{-- Mobile Tab Toggle --}}
+    <div class="pos-tabs">
+        <button class="pos-tab" :class="activeTab === 'products' ? 'active' : ''" @click="activeTab='products'">
+            <i class="ti ti-package"></i> Produk
+        </button>
+        <button class="pos-tab" :class="activeTab === 'cart' ? 'active' : ''" @click="activeTab='cart'">
+            <i class="ti ti-shopping-cart"></i> Keranjang
+            <span class="cart-badge" x-show="cart.length > 0" x-text="cart.length" x-cloak></span>
+        </button>
+    </div>
+
+    {{-- LEFT: Product Panel --}}
+    <div class="pos-panel-products" :class="activeTab !== 'products' ? 'hidden-panel' : ''">
 
         {{-- Search + Filter --}}
-        <div style="display:flex;gap:12px;">
-            <input type="text" x-model="search" placeholder="Cari produk..." style="flex:1;padding:12px 16px;font-size:14px;border:3px solid #000;box-shadow:4px 4px 0 #000;font-family:'Space Mono',monospace;">
-            <select x-model="filterCategory" style="padding:12px 16px;font-size:14px;border:3px solid #000;box-shadow:4px 4px 0 #000;font-family:'Space Mono',monospace;">
-                <option value="">Semua Kategori</option>
+        <div class="pos-search">
+            <div style="position:relative;flex:1;">
+                <i class="ti ti-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none;color:#888;"></i>
+                <input type="text" x-model="search" placeholder="Cari produk..."
+                       style="padding-left:36px !important;width:100%;">
+            </div>
+            <select x-model="filterCategory" style="width:auto;min-width:120px;">
+                <option value="">Semua</option>
                 @foreach($categories as $cat)
                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                 @endforeach
             </select>
         </div>
 
-        {{-- Product Cards --}}
-        <div class="r-grid-cards" style="overflow-y:auto;flex:1;gap:16px;">
+        {{-- Product Grid --}}
+        <div class="pos-product-grid" style="overflow-y:auto;flex:1;">
             @foreach($products as $product)
             <div x-show="matchesFilter({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $product->category_id }})"
                  @click="addToCart({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $product->price }}, {{ $product->stock }})"
-                 style="border:3px solid #000;background:#fff;cursor:pointer;padding:16px;box-shadow:4px 4px 0 #000;display:flex;flex-direction:column;transition:transform 0.1s;"
-                 :style="getProductInCart({{ $product->id }}) ? 'background:#FFDD00;' : ''"
-                 onmouseover="this.style.transform='translate(-2px, -2px)';this.style.boxShadow='6px 6px 0 #000'"
-                 onmouseout="this.style.transform='none';this.style.boxShadow='4px 4px 0 #000'">
+                 class="pos-product-card"
+                 :class="getProductInCart({{ $product->id }}) ? 'in-cart' : ''">
 
                 @if($product->image)
-                <div style="width:100%;height:100px;overflow:hidden;margin-bottom:12px;background:#000;display:flex;align-items:center;justify-content:center;border:2px solid #000;">
-                    <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" style="max-width:100%;max-height:100%;object-fit:contain;">
+                <div class="prod-img">
+                    <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}">
+                </div>
+                @else
+                <div class="prod-img">
+                    <i class="ti ti-package" style="font-size:24px;color:#aaa;"></i>
                 </div>
                 @endif
 
-                <p style="font-size:14px;font-weight:800;color:#000;line-height:1.3;margin-bottom:4px;">{{ $product->name }}</p>
-                <p style="font-size:11px;font-weight:700;color:#000;opacity:0.6;font-family:'Space Mono',monospace;margin-bottom:8px;">{{ $product->sku }}</p>
-                <div style="margin-top:auto;">
-                    <p style="font-size:16px;font-weight:800;color:#000;">{{ $product->formatted_price }}</p>
-                    <p style="font-size:11px;font-weight:700;color:#000;margin-top:4px;font-family:'Space Mono',monospace;background:var(--bg-primary);display:inline-block;padding:2px 6px;color:var(--text-on-primary);">
-                        STOK: {{ $product->stock }}
-                    </p>
-                </div>
+                <p class="prod-name">{{ $product->name }}</p>
+                <p class="prod-sku">{{ $product->sku }}</p>
+                <p class="prod-price">{{ $product->formatted_price }}</p>
+                <span class="prod-stock {{ $product->stock <= 0 ? 'empty' : '' }}">
+                    {{ $product->stock > 0 ? 'STOK: '.$product->stock : 'HABIS' }}
+                </span>
             </div>
             @endforeach
         </div>
     </div>
 
-    {{-- RIGHT: Cart --}}
-    <div class="nb-card" style="display:flex;flex-direction:column;max-height:calc(100vh - 120px);position:sticky;top:20px;">
+    {{-- RIGHT: Cart Panel --}}
+    <div class="pos-panel-cart" :class="activeTab === 'cart' ? 'shown-panel' : ''">
 
-        {{-- Cart Header --}}
-        <div class="nb-card-header" style="background:#000;color:#00FF85;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Keranjang</span>
-            <span x-show="cart.length > 0" style="font-size:13px;color:#00FF85;font-weight:700;font-family:'Space Mono',monospace;background:#222;padding:2px 8px;border:1px solid #00FF85;" x-text="cart.length + ' item'"></span>
+        {{-- Cart Header (desktop only) --}}
+        <div class="nb-card-header" style="background:#000;color:#00FF85;flex-shrink:0;display:none;"
+             id="cart-header-desktop">
+            <span>Keranjang</span>
+            <span x-show="cart.length > 0" style="font-size:12px;color:#00FF85;background:#222;padding:2px 8px;border:1px solid #00FF85;"
+                  x-text="cart.length + ' item'"></span>
         </div>
 
         {{-- Cart Items --}}
-        <div style="flex:1;overflow-y:auto;padding:0;background:#fff;">
+        <div style="flex:1;overflow-y:auto;background:#fff;">
             <template x-if="cart.length === 0">
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;opacity:0.5;">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:48px;height:48px;margin-bottom:12px;color:#000;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                    </svg>
-                    <p style="font-size:13px;font-weight:700;color:#000;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;">Keranjang Kosong</p>
+                <div class="cart-empty">
+                    <i class="ti ti-shopping-cart-off"></i>
+                    <p>Keranjang Kosong</p>
                 </div>
             </template>
 
             <template x-for="(item, index) in cart" :key="item.product_id">
-                <div style="padding:16px 20px;border-bottom:3px solid #000;background:#FFDD00;">
-                    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px;">
-                        <div style="min-width:0;flex:1;">
-                            <p style="font-size:14px;font-weight:800;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;" x-text="item.name"></p>
-                            <p style="font-size:13px;font-weight:600;color:#222;font-family:'Space Mono',monospace;" x-text="formatRupiah(item.price) + ' × ' + item.quantity"></p>
+                <div class="cart-item">
+                    <div class="cart-item-row">
+                        <div style="min-width:0;flex:1;margin-right:10px;">
+                            <p class="cart-item-name" x-text="item.name"></p>
+                            <p class="cart-item-price-info" x-text="formatRupiah(item.price) + ' × ' + item.quantity"></p>
                         </div>
-                        <button @click="removeFromCart(index)" style="background:#FF3B3B;border:2px solid #000;color:#fff;cursor:pointer;padding:4px;box-shadow:2px 2px 0 #000;display:flex;align-items:center;justify-content:center;transition:transform 0.1s;" onmousedown="this.style.transform='translate(2px,2px)';this.style.boxShadow='none'" onmouseup="this.style.transform='none';this.style.boxShadow='2px 2px 0 #000'">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;">
-                                <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
-                            </svg>
+                        <button @click="removeFromCart(index)" class="cart-rm-btn">
+                            <i class="ti ti-x" style="font-size:14px;"></i>
                         </button>
                     </div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;">
-                        <div style="display:flex;align-items:center;gap:0;border:2px solid #000;background:#fff;box-shadow:2px 2px 0 #000;">
-                            <button @click="updateQty(index, -1)" style="background:none;border:none;border-right:2px solid #000;color:#000;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;transition:background 0.1s;" onmouseover="this.style.background='#eee'" onmouseout="this.style.background='transparent'">−</button>
-                            <span style="font-size:14px;font-weight:800;color:#000;width:40px;text-align:center;font-family:'Space Mono',monospace;" x-text="item.quantity"></span>
-                            <button @click="updateQty(index, 1)" style="background:none;border:none;border-left:2px solid #000;color:#000;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;transition:background 0.1s;" onmouseover="this.style.background='#eee'" onmouseout="this.style.background='transparent'">+</button>
+                    <div class="cart-qty-wrap">
+                        <div class="cart-qty-group">
+                            <button @click="updateQty(index, -1)" class="cart-qty-btn">−</button>
+                            <span class="cart-qty-val" x-text="item.quantity"></span>
+                            <button @click="updateQty(index, 1)" class="cart-qty-btn">+</button>
                         </div>
-                        <span style="font-size:16px;font-weight:800;color:#000;font-family:'Space Mono',monospace;background:#fff;padding:4px 8px;border:2px solid #000;box-shadow:2px 2px 0 #000;" x-text="formatRupiah(item.price * item.quantity)"></span>
+                        <span class="cart-item-total" x-text="formatRupiah(item.price * item.quantity)"></span>
                     </div>
                 </div>
             </template>
         </div>
 
         {{-- Cart Footer --}}
-        <div style="border-top:3px solid #000;padding:20px;display:flex;flex-direction:column;gap:16px;background:#fff;">
-
+        <div class="cart-footer">
             {{-- Subtotal --}}
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:13px;font-weight:700;color:#000;text-transform:uppercase;letter-spacing:0.05em;font-family:'Space Mono',monospace;">Subtotal</span>
-                <span style="font-size:15px;font-weight:800;color:#000;font-family:'Space Mono',monospace;" x-text="formatRupiah(subtotal)"></span>
+            <div class="cart-row">
+                <span class="cart-row-label">Subtotal</span>
+                <span style="font-size:14px;font-weight:800;font-family:'Space Mono',monospace;" x-text="formatRupiah(subtotal)"></span>
             </div>
 
             {{-- Discount --}}
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                <label style="font-size:13px;font-weight:700;color:#000;white-space:nowrap;text-transform:uppercase;letter-spacing:0.05em;font-family:'Space Mono',monospace;">Diskon (Rp)</label>
-                <input type="number" x-model.number="discount" min="0" style="width:120px;padding:8px 12px;font-size:14px;font-weight:700;text-align:right;border:3px solid #000;box-shadow:3px 3px 0 #000;font-family:'Space Mono',monospace;">
+            <div class="cart-row">
+                <label class="cart-row-label" style="margin:0;">Diskon (Rp)</label>
+                <input type="number" x-model.number="discount" min="0"
+                       style="width:110px !important;padding:8px 10px !important;font-size:13px !important;font-weight:700;text-align:right;font-family:'Space Mono',monospace;">
             </div>
 
             {{-- Grand Total --}}
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;background:#FFDD00;border:3px solid #000;box-shadow:4px 4px 0 #000;">
-                <span style="font-size:18px;font-weight:800;color:#000;text-transform:uppercase;letter-spacing:0.05em;">TOTAL</span>
-                <span style="font-size:24px;font-weight:800;color:#000;font-family:'Space Mono',monospace;" x-text="formatRupiah(grandTotal)"></span>
+            <div class="cart-total-box">
+                <span class="cart-total-label">TOTAL</span>
+                <span class="cart-total-val" x-text="formatRupiah(grandTotal)"></span>
             </div>
 
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                {{-- Customer (optional) --}}
+            {{-- Customer & Payment --}}
+            <div class="cart-fields">
                 <div>
-                    <label style="font-size:11px;font-weight:700;color:#000;letter-spacing:0.05em;display:block;margin-bottom:6px;text-transform:uppercase;font-family:'Space Mono',monospace;">Pelanggan</label>
-                    <select x-model="customerId" style="width:100%;padding:10px 14px;font-size:13px;border:3px solid #000;box-shadow:3px 3px 0 #000;font-family:'Space Mono',monospace;cursor:pointer;">
+                    <label>Pelanggan</label>
+                    <select x-model="customerId">
                         <option value="">— Umum —</option>
                         @foreach($customers as $cust)
                         <option value="{{ $cust->id }}">{{ $cust->name }}</option>
                         @endforeach
                     </select>
                 </div>
-
-                {{-- Payment Method --}}
                 <div>
-                    <label style="font-size:11px;font-weight:700;color:#000;letter-spacing:0.05em;display:block;margin-bottom:6px;text-transform:uppercase;font-family:'Space Mono',monospace;">Metode</label>
-                    <select x-model="paymentMethod" style="width:100%;padding:10px 14px;font-size:13px;border:3px solid #000;box-shadow:3px 3px 0 #000;font-family:'Space Mono',monospace;cursor:pointer;">
+                    <label>Metode</label>
+                    <select x-model="paymentMethod">
                         <option value="Cash">Cash</option>
                         <option value="QRIS">QRIS</option>
                         <option value="Transfer Bank">Transfer Bank</option>
-                        <option value="Virtual Account">Virtual Account</option>
+                        <option value="Virtual Account">VA</option>
                         <option value="E-Wallet">E-Wallet</option>
                     </select>
                 </div>
@@ -144,12 +556,8 @@
             {{-- Pay Button --}}
             <button @click="submitTransaction()"
                     :disabled="cart.length === 0"
-                    class="btn-nb btn-primary"
-                    style="width:100%;justify-content:center;padding:16px;font-size:18px;margin-top:8px;background:#0066FF;color:#fff;"
-                    :style="cart.length === 0 ? 'opacity:0.5;cursor:not-allowed;box-shadow:none;transform:translate(4px,4px)' : ''">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
-                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/>
-                </svg>
+                    class="pos-pay-btn">
+                <i class="ti ti-circle-check" style="font-size:22px;"></i>
                 PROSES BAYAR
             </button>
         </div>
@@ -180,6 +588,7 @@ function posApp() {
         paymentMethod: 'Cash',
         search: '',
         filterCategory: '',
+        activeTab: 'products',
 
         get subtotal() {
             return this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -205,10 +614,11 @@ function posApp() {
                     existing.quantity++;
                 }
             } else {
-                if(stock > 0) {
-                   this.cart.push({ product_id: productId, name, price, quantity: 1, maxStock: stock });
+                if (stock > 0) {
+                    this.cart.push({ product_id: productId, name, price, quantity: 1, maxStock: stock });
+                    // On mobile, show badge animation
                 } else {
-                   alert('Stok produk habis!');
+                    alert('Stok produk habis!');
                 }
             }
         },
@@ -240,6 +650,17 @@ function posApp() {
         }
     };
 }
+
+// Show desktop cart header on >=768
+(function() {
+    const mq = window.matchMedia('(min-width: 768px)');
+    function toggle(e) {
+        const el = document.getElementById('cart-header-desktop');
+        if (el) el.style.display = e.matches ? 'flex' : 'none';
+    }
+    mq.addEventListener('change', toggle);
+    toggle(mq);
+})();
 </script>
 @endpush
 @endsection
