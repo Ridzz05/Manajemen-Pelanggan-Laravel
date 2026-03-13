@@ -44,20 +44,22 @@
     </div>
 
     {{-- Search / Filter --}}
-    <div class="r-flex-toolbar" style="flex-wrap:wrap;">
-        <form method="GET" style="display:flex;gap:8px;flex-wrap:wrap;">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari invoice / pelanggan..." style="padding:9px 12px;width:220px;">
-            <select name="status" style="padding:9px 12px;">
-                <option value="">Semua Status</option>
-                <option value="paid"    {{ request('status') === 'paid'    ? 'selected' : '' }}>Lunas</option>
-                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="failed"  {{ request('status') === 'failed'  ? 'selected' : '' }}>Gagal</option>
-            </select>
-            <button type="submit" class="btn-nb btn-secondary">Filter</button>
-            @if(request('search') || request('status'))
-                <a href="{{ route('transactions.index') }}" class="btn-nb btn-secondary">✕ Reset</a>
-            @endif
-        </form>
+    <div class="nb-toolbar">
+        <div class="nb-toolbar-left">
+            <form method="GET" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari invoice / pelanggan..." style="width:220px;">
+                <select name="status" style="width:155px;">
+                    <option value="">Semua Status</option>
+                    <option value="paid"    {{ request('status') === 'paid'    ? 'selected' : '' }}>Lunas</option>
+                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="failed"  {{ request('status') === 'failed'  ? 'selected' : '' }}>Gagal</option>
+                </select>
+                <button type="submit" class="btn-nb btn-secondary">Filter</button>
+                @if(request('search') || request('status'))
+                    <a href="{{ route('transactions.index') }}" class="btn-nb btn-secondary">✕ Reset</a>
+                @endif
+            </form>
+        </div>
     </div>
 
     {{-- Table --}}
@@ -96,7 +98,7 @@
                         </td>
                         <td class="r-hide-mobile" style="text-align:right;font-size:11px;color:#888;font-family:'Space Mono',monospace;white-space:nowrap;">{{ $trx->created_at->format('d.m.Y H:i') }}</td>
                         <td style="text-align:right;">
-                            <a href="{{ route('transactions.show', $trx) }}" class="btn-nb btn-secondary" style="padding:5px 10px;font-size:11px;">Detail</a>
+                            <a href="{{ route('transactions.show', $trx) }}" class="btn-nb btn-secondary btn-sm">Detail</a>
                         </td>
                     </tr>
                     @empty
@@ -109,7 +111,7 @@
                 </tbody>
             </table>
         </div>
-        <div style="padding:12px 16px;border-top:2px solid #000;background:#FFFBF0;">
+        <div style="padding:14px 18px;border-top:2.5px solid #000;background:#FFFBF0;">
             {{ $transactions->links() }}
         </div>
     </div>

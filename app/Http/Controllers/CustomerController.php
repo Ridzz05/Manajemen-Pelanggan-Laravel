@@ -11,13 +11,15 @@ class CustomerController extends Controller
 {
     public function index(Request $request): View
     {
-        $customers = Customer::withCount('subscriptions')
-            ->when($request->filled('search'), fn($q) =>
-                $q->where('name', 'like', "%{$request->search}%")
-                  ->orWhere('email', 'like', "%{$request->search}%")
-                  ->orWhere('project_name', 'like', "%{$request->search}%")
-            )
-            ->latest()
+        $query = Customer::withCount('subscriptions');
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', "%{$request->search}%")
+                  ->orWhere('telegram_user_id', 'like', "%{$request->search}%")
+                  ->orWhere('project_name', 'like', "%{$request->search}%");
+        }
+
+        $customers = $query->latest()
             ->paginate(15)
             ->withQueryString();
 
@@ -33,7 +35,7 @@ class CustomerController extends Controller
     {
         $validated = $request->validate([
             'name'         => 'required|string|max:255',
-            'email'        => 'required|email|unique:customers,email',
+            'telegram_user_id' => 'required|string|unique:customers,telegram_user_id|max:255',
             'phone'        => 'nullable|string|max:20',
             'company_name' => 'nullable|string|max:255',
             'project_name' => 'required|string|max:255',
@@ -60,7 +62,7 @@ class CustomerController extends Controller
     {
         $validated = $request->validate([
             'name'         => 'required|string|max:255',
-            'email'        => "required|email|unique:customers,email,{$customer->id}",
+            'telegram_user_id' => "required|string|unique:customers,telegram_user_id,{$customer->id}|max:255",
             'phone'        => 'nullable|string|max:20',
             'company_name' => 'nullable|string|max:255',
             'project_name' => 'required|string|max:255',

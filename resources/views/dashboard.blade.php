@@ -8,128 +8,150 @@
 <div style="display:flex;flex-direction:column;gap:24px;">
 
     {{-- ── Stats Grid ─────────────────────────────────────── --}}
-    <div class="r-grid-stats" style="gap:14px;">
+    <div class="r-grid-stats" style="gap:16px;">
 
         {{-- Total Pelanggan --}}
         <div class="nb-card" style="background:#fff;">
-            <div style="background:#0066FF;padding:10px 16px;border-bottom:2.5px solid #000;">
-                <span style="font-size:10px;font-weight:700;color:#fff;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Pelanggan</span>
+            <div class="nb-card-header" style="background:#0066FF;color:#fff;">
+                <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Pelanggan</span>
             </div>
-            <div style="padding:16px 18px;">
-                <p style="font-size:36px;font-weight:800;color:#000;line-height:1;font-variant-numeric:tabular-nums;">{{ number_format($stats['total_customers']) }}</p>
-                <p style="font-size:11px;color:#888;margin-top:4px;font-family:'Space Mono',monospace;">total terdaftar</p>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:4px;">
+                <p style="font-size:42px;font-weight:900;color:#000;line-height:1;font-variant-numeric:tabular-nums;">{{ number_format($stats['total_customers']) }}</p>
+                <p style="font-size:12px;font-weight:700;color:#000;opacity:0.6;font-family:'Space Mono',monospace;">Total Terdaftar</p>
             </div>
         </div>
 
         {{-- Total Produk --}}
         <div class="nb-card" style="background:#fff;">
-            <div style="background:#FF6B35;padding:10px 16px;border-bottom:2.5px solid #000;">
-                <span style="font-size:10px;font-weight:700;color:#fff;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Produk</span>
+            <div class="nb-card-header" style="background:#FF6B35;color:#fff;">
+                <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Produk</span>
             </div>
-            <div style="padding:16px 18px;">
-                <p style="font-size:36px;font-weight:800;color:#000;line-height:1;font-variant-numeric:tabular-nums;">{{ number_format($stats['total_products']) }}</p>
-                <p style="font-size:11px;color:#888;margin-top:4px;font-family:'Space Mono',monospace;">item di katalog</p>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:4px;">
+                <p style="font-size:42px;font-weight:900;color:#000;line-height:1;font-variant-numeric:tabular-nums;">{{ number_format($stats['total_products']) }}</p>
+                <p style="font-size:12px;font-weight:700;color:#000;opacity:0.6;font-family:'Space Mono',monospace;">Katalog Item</p>
             </div>
         </div>
 
         {{-- Sub. Aktif --}}
         <div class="nb-card" style="background:#fff;">
-            <div style="background:#00FF85;padding:10px 16px;border-bottom:2.5px solid #000;">
-                <span style="font-size:10px;font-weight:700;color:#000;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Sub. Aktif</span>
+            <div class="nb-card-header" style="background:#00FF85;color:#000;">
+                <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Sub. Aktif</span>
             </div>
-            <div style="padding:16px 18px;">
-                <p style="font-size:36px;font-weight:800;color:#000;line-height:1;font-variant-numeric:tabular-nums;">{{ number_format($stats['active_subs']) }}</p>
-                <p style="font-size:11px;color:#888;margin-top:4px;font-family:'Space Mono',monospace;">berlangganan aktif</p>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:4px;">
+                <p style="font-size:42px;font-weight:900;color:#000;line-height:1;font-variant-numeric:tabular-nums;">{{ number_format($stats['active_subs']) }}</p>
+                <p style="font-size:12px;font-weight:700;color:#000;opacity:0.6;font-family:'Space Mono',monospace;">Langganan Berjalan</p>
             </div>
         </div>
 
         {{-- Transaksi Hari Ini --}}
         <div class="nb-card" style="background:#fff;">
-            <div style="background:#FF90E8;padding:10px 16px;border-bottom:2.5px solid #000;">
-                <span style="font-size:10px;font-weight:700;color:#000;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Trx Hari Ini</span>
+            <div class="nb-card-header" style="background:#FF90E8;color:#000;">
+                <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Trx Hari Ini</span>
             </div>
-            <div style="padding:16px 18px;">
-                <p style="font-size:36px;font-weight:800;color:#000;line-height:1;font-variant-numeric:tabular-nums;">{{ number_format($stats['today_transactions']) }}</p>
-                <p style="font-size:11px;color:#888;margin-top:4px;font-family:'Space Mono',monospace;">transaksi kasir</p>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:4px;">
+                <p style="font-size:42px;font-weight:900;color:#000;line-height:1;font-variant-numeric:tabular-nums;">{{ number_format($stats['today_transactions']) }}</p>
+                <p style="font-size:12px;font-weight:700;color:#000;opacity:0.6;font-family:'Space Mono',monospace;">Transaksi Baru</p>
             </div>
         </div>
 
         {{-- Total Revenue --}}
         <div class="nb-card" style="background:#FFDD00;">
-            <div style="background:#000;padding:10px 16px;border-bottom:2.5px solid #000;">
-                <span style="font-size:10px;font-weight:700;color:#FFDD00;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Total Revenue</span>
+            <div class="nb-card-header" style="background:#000;color:#FFDD00;">
+                <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Total Revenue</span>
             </div>
-            <div style="padding:16px 18px;">
-                <p style="font-size:22px;font-weight:800;color:#000;line-height:1;font-variant-numeric:tabular-nums;">Rp {{ number_format($stats['total_revenue'], 0, ',', '.') }}</p>
-                <p style="font-size:11px;color:#555;margin-top:4px;font-family:'Space Mono',monospace;">semua waktu</p>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:6px;">
+                <p style="font-size:24px;font-weight:900;color:#000;line-height:1;font-variant-numeric:tabular-nums;">Rp {{ number_format($stats['total_revenue'], 0, ',', '.') }}</p>
+                <p style="font-size:12px;font-weight:700;color:#000;opacity:0.6;font-family:'Space Mono',monospace;">Semua Waktu</p>
             </div>
         </div>
 
         {{-- Revenue Hari Ini --}}
         <div class="nb-card" style="background:#fff;">
-            <div style="background:#FF3B3B;padding:10px 16px;border-bottom:2.5px solid #000;">
-                <span style="font-size:10px;font-weight:700;color:#fff;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Rev. Hari Ini</span>
+            <div class="nb-card-header" style="background:#FF3B3B;color:#fff;">
+                <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Rev. Hari Ini</span>
             </div>
-            <div style="padding:16px 18px;">
-                <p style="font-size:22px;font-weight:800;color:#000;line-height:1;font-variant-numeric:tabular-nums;">Rp {{ number_format($stats['today_revenue'], 0, ',', '.') }}</p>
-                <p style="font-size:11px;color:#888;margin-top:4px;font-family:'Space Mono',monospace;">{{ now()->format('d M Y') }}</p>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:6px;">
+                <p style="font-size:24px;font-weight:900;color:#000;line-height:1;font-variant-numeric:tabular-nums;">Rp {{ number_format($stats['today_revenue'], 0, ',', '.') }}</p>
+                <p style="font-size:12px;font-weight:700;color:#000;opacity:0.6;font-family:'Space Mono',monospace;">{{ now()->format('d M Y') }}</p>
             </div>
         </div>
 
     </div>
 
     {{-- ── Recent Tables ───────────────────────────────────── --}}
-    <div class="r-grid-recent">
+    <div class="r-grid-recent" style="gap:24px;">
 
         {{-- Recent Transactions --}}
         <div class="nb-card">
-            <div class="nb-card-header" style="background:#000;color:#FFDD00;">
-                <span>Transaksi Terbaru</span>
-                <a href="{{ route('transactions.index') }}" style="font-size:11px;color:#FFDD00;text-decoration:none;font-family:'Space Mono',monospace;opacity:0.7;">lihat semua →</a>
+            <div class="nb-card-header" style="background:#000;color:#FFDD00;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Transaksi Terbaru</span>
+                <a href="{{ route('transactions.index') }}" class="btn-nb btn-secondary" style="padding:4px 10px;font-size:11px;background:#FFDD00;color:#000;border:2px solid #FFDD00;">
+                    Lihat Semua →
+                </a>
             </div>
             <div class="r-table-wrap">
-                @forelse($recentTransactions as $trx)
-                    <div style="padding:12px 16px;border-bottom:1.5px solid #000;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                        <div style="min-width:0;">
-                            <p style="font-size:13px;font-weight:700;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $trx->customer->name ?? 'Umum' }}</p>
-                            <p style="font-size:11px;color:#888;margin-top:1px;font-family:'Space Mono',monospace;">{{ $trx->invoice_number }}</p>
-                        </div>
-                        <div style="text-align:right;flex-shrink:0;">
-                            <p style="font-size:13px;font-weight:800;color:#000;">{{ $trx->formatted_grand_total }}</p>
-                            <span class="badge badge-success" style="margin-top:2px;">LUNAS</span>
-                        </div>
-                    </div>
-                @empty
-                    <p style="font-size:12px;color:#aaa;text-align:center;padding:24px;font-family:'Space Mono',monospace;">— kosong —</p>
-                @endforelse
+                <table style="width:100%;border-collapse:collapse;">
+                    <tbody>
+                        @forelse($recentTransactions as $trx)
+                            <tr style="border-bottom:3px solid #000;">
+                                <td style="padding:16px 20px;">
+                                    <p style="font-size:14px;font-weight:800;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $trx->customer->name ?? 'Umum' }}</p>
+                                    <p style="font-size:12px;font-weight:600;color:#444;margin-top:2px;font-family:'Space Mono',monospace;">{{ $trx->invoice_number }}</p>
+                                </td>
+                                <td style="padding:16px 20px;text-align:right;">
+                                    <p style="font-size:15px;font-weight:900;color:#000;">{{ $trx->formatted_grand_total }}</p>
+                                    @if($trx->payment_status === 'paid')
+                                        <span class="badge badge-success" style="margin-top:4px;display:inline-block;">LUNAS</span>
+                                    @elseif($trx->payment_status === 'pending')
+                                        <span class="badge badge-warning" style="margin-top:4px;display:inline-block;">PENDING</span>
+                                    @else
+                                        <span class="badge badge-danger" style="margin-top:4px;display:inline-block;">GAGAL</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="2" style="font-size:13px;font-weight:700;color:#888;text-align:center;padding:48px;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;">— Kosong —</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
 
         {{-- Recent Subscriptions --}}
         <div class="nb-card">
-            <div class="nb-card-header" style="background:#0066FF;color:#fff;">
-                <span>Subscription Terbaru</span>
-                <a href="{{ route('subscriptions.index') }}" style="font-size:11px;color:#fff;text-decoration:none;font-family:'Space Mono',monospace;opacity:0.7;">lihat semua →</a>
+            <div class="nb-card-header" style="background:#0066FF;color:#fff;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:'Space Mono',monospace;">Subscription Terbaru</span>
+                <a href="{{ route('subscriptions.index') }}" class="btn-nb btn-secondary" style="padding:4px 10px;font-size:11px;background:#fff;color:#0066FF;border:2px solid #fff;">
+                    Lihat Semua →
+                </a>
             </div>
             <div class="r-table-wrap">
-                @forelse($recentSubscriptions as $sub)
-                    <div style="padding:12px 16px;border-bottom:1.5px solid #000;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                        <div style="min-width:0;">
-                            <p style="font-size:13px;font-weight:700;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $sub->customer->name }}</p>
-                            <p style="font-size:11px;color:#888;margin-top:1px;font-family:'Space Mono',monospace;">{{ $sub->category->name ?? '-' }}</p>
-                        </div>
-                        <div style="text-align:right;flex-shrink:0;">
-                            @if($sub->status === 'active')
-                                <span class="badge badge-success">AKTIF</span>
-                            @else
-                                <span class="badge badge-muted">EXPIRED</span>
-                            @endif
-                            <p style="font-size:10px;color:#888;margin-top:4px;font-family:'Space Mono',monospace;">{{ $sub->end_date->format('d.m.Y') }}</p>
-                        </div>
-                    </div>
-                @empty
-                    <p style="font-size:12px;color:#aaa;text-align:center;padding:24px;font-family:'Space Mono',monospace;">— kosong —</p>
-                @endforelse
+                <table style="width:100%;border-collapse:collapse;">
+                    <tbody>
+                        @forelse($recentSubscriptions as $sub)
+                            <tr style="border-bottom:3px solid #000;">
+                                <td style="padding:16px 20px;">
+                                    <p style="font-size:14px;font-weight:800;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $sub->customer->name }}</p>
+                                    <p style="font-size:12px;font-weight:600;color:#444;margin-top:2px;font-family:'Space Mono',monospace;">{{ $sub->category->name ?? '-' }}</p>
+                                </td>
+                                <td style="padding:16px 20px;text-align:right;">
+                                    @if($sub->status === 'active')
+                                        <span class="badge badge-success" style="display:inline-block;">AKTIF</span>
+                                    @else
+                                        <span class="badge badge-muted" style="display:inline-block;">EXPIRED</span>
+                                    @endif
+                                    <p style="font-size:11px;font-weight:700;color:#000;opacity:0.6;margin-top:6px;font-family:'Space Mono',monospace;">{{ $sub->end_date->format('d.m.Y') }}</p>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="2" style="font-size:13px;font-weight:700;color:#888;text-align:center;padding:48px;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;">— Kosong —</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
 

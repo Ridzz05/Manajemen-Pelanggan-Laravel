@@ -23,28 +23,28 @@
     </div>
 
     {{-- Toolbar --}}
-    <div class="r-flex-header">
-        <form method="GET" action="{{ route('payments.index') }}" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <select name="status" onchange="this.form.submit()" style="padding:9px 12px;">
-                <option value="">Semua Status</option>
-                <option value="pending" {{ request('status')==='pending' ? 'selected':'' }}>Pending</option>
-                <option value="paid"    {{ request('status')==='paid'    ? 'selected':'' }}>Lunas</option>
-                <option value="failed"  {{ request('status')==='failed'  ? 'selected':'' }}>Gagal</option>
-            </select>
-            <select name="method" onchange="this.form.submit()" style="padding:9px 12px;">
-                <option value="">Semua Metode</option>
-                @foreach(\App\Models\Payment::PAYMENT_METHODS as $m)
-                    <option value="{{ $m }}" {{ request('method')===$m ? 'selected':'' }}>{{ $m }}</option>
-                @endforeach
-            </select>
-            @if(request('status') || request('method'))
-                <a href="{{ route('payments.index') }}" class="btn-nb btn-secondary">✕ Reset</a>
-            @endif
-        </form>
+    <div class="nb-toolbar">
+        <div class="nb-toolbar-left">
+            <form method="GET" action="{{ route('payments.index') }}" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <select name="status" onchange="this.form.submit()" style="width:160px;">
+                    <option value="">Semua Status</option>
+                    <option value="pending" {{ request('status')==='pending' ? 'selected':'' }}>Pending</option>
+                    <option value="paid"    {{ request('status')==='paid'    ? 'selected':'' }}>Lunas</option>
+                    <option value="failed"  {{ request('status')==='failed'  ? 'selected':'' }}>Gagal</option>
+                </select>
+                <select name="method" onchange="this.form.submit()" style="width:160px;">
+                    <option value="">Semua Metode</option>
+                    @foreach(\App\Models\Payment::PAYMENT_METHODS as $m)
+                        <option value="{{ $m }}" {{ request('method')===$m ? 'selected':'' }}>{{ $m }}</option>
+                    @endforeach
+                </select>
+                @if(request('status') || request('method'))
+                    <a href="{{ route('payments.index') }}" class="btn-nb btn-secondary">✕ Reset</a>
+                @endif
+            </form>
+        </div>
         <a href="{{ route('payments.create') }}" class="btn-nb btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-            </svg>
+            <i class="ti ti-plus"></i>
             Catat Pembayaran
         </a>
     </div>
@@ -98,12 +98,12 @@
                             </td>
                             <td style="text-align:right;">
                                 <div style="display:inline-flex;gap:6px;">
-                                    <a href="{{ route('payments.show', $pay) }}" class="btn-nb btn-secondary" style="padding:5px 10px;font-size:11px;">Detail</a>
-                                    <a href="{{ route('payments.edit', $pay) }}" class="btn-nb btn-blue" style="padding:5px 10px;font-size:11px;">Edit</a>
+                                    <a href="{{ route('payments.show', $pay) }}" class="btn-nb btn-secondary btn-sm">Detail</a>
+                                    <a href="{{ route('payments.edit', $pay) }}" class="btn-nb btn-blue btn-sm">Edit</a>
                                     <form method="POST" action="{{ route('payments.destroy', $pay) }}"
                                           onsubmit="return confirm('Hapus data pembayaran ini?')" style="display:inline;">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn-nb btn-danger" style="padding:5px 10px;font-size:11px;">Hapus</button>
+                                        <button type="submit" class="btn-nb btn-danger btn-sm">Hapus</button>
                                     </form>
                                 </div>
                             </td>
@@ -120,18 +120,18 @@
             </table>
         </div>
         @if($payments->hasPages())
-            <div style="padding:12px 16px;border-top:2px solid #000;background:#FFFBF0;display:flex;align-items:center;justify-content:space-between;">
+            <div style="padding:14px 18px;border-top:2.5px solid #000;background:#FFFBF0;display:flex;align-items:center;justify-content:space-between;">
                 <span style="font-size:11px;color:#555;font-family:'Space Mono',monospace;">{{ $payments->firstItem() }}–{{ $payments->lastItem() }} dari {{ $payments->total() }}</span>
                 <div style="display:flex;gap:6px;">
                     @if($payments->onFirstPage())
-                        <span style="padding:5px 12px;border:2px solid #ccc;font-size:12px;color:#ccc;cursor:default;">‹</span>
+                        <span class="btn-nb btn-secondary btn-sm" style="opacity:0.4;cursor:default;">‹ Prev</span>
                     @else
-                        <a href="{{ $payments->previousPageUrl() }}" class="btn-nb btn-secondary" style="padding:5px 12px;font-size:12px;">‹</a>
+                        <a href="{{ $payments->previousPageUrl() }}" class="btn-nb btn-secondary btn-sm">‹ Prev</a>
                     @endif
                     @if($payments->hasMorePages())
-                        <a href="{{ $payments->nextPageUrl() }}" class="btn-nb btn-secondary" style="padding:5px 12px;font-size:12px;">›</a>
+                        <a href="{{ $payments->nextPageUrl() }}" class="btn-nb btn-secondary btn-sm">Next ›</a>
                     @else
-                        <span style="padding:5px 12px;border:2px solid #ccc;font-size:12px;color:#ccc;cursor:default;">›</span>
+                        <span class="btn-nb btn-secondary btn-sm" style="opacity:0.4;cursor:default;">Next ›</span>
                     @endif
                 </div>
             </div>

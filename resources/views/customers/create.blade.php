@@ -20,9 +20,9 @@
                     @error('name') <p style="font-size:11px;color:#FF3B3B;margin-top:4px;font-weight:600;">{{ $message }}</p> @enderror
                 </div>
                 <div>
-                    <label style="display:block;font-size:11px;font-weight:700;color:#000;letter-spacing:0.1em;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:6px;">Email *</label>
-                    <input type="email" name="email" value="{{ old('email') }}" required placeholder="john@example.com" style="width:100%;padding:10px 13px;">
-                    @error('email') <p style="font-size:11px;color:#FF3B3B;margin-top:4px;font-weight:600;">{{ $message }}</p> @enderror
+                    <label style="display:block;font-size:11px;font-weight:700;color:#000;margin-bottom:6px;letter-spacing:0.1em;text-transform:uppercase;font-family:'Space Mono',monospace;">Telegram User ID *</label>
+                    <input type="text" name="telegram_user_id" value="{{ old('telegram_user_id') }}" required placeholder="12345678" style="width:100%;padding:10px 13px;border:3px solid #000;box-shadow:4px 4px 0 #000;font-size:13px;font-family:'Space Mono',monospace;">
+                    @error('telegram_user_id') <p style="font-size:11px;color:#FF3B3B;margin-top:6px;font-weight:600;font-family:'Space Mono',monospace;">{{ $message }}</p> @enderror
                 </div>
                 <div>
                     <label style="display:block;font-size:11px;font-weight:700;color:#000;letter-spacing:0.1em;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:6px;">No. WhatsApp</label>

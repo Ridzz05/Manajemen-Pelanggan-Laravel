@@ -26,33 +26,30 @@
     </div>
 
     {{-- Toolbar --}}
-    <div class="r-flex-header">
-        <form method="GET" action="{{ route('subscriptions.index') }}"
-              style="display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;">
-            <div style="position:relative;flex:1;min-width:180px;">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"
-                     style="position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;pointer-events:none;">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
-                </svg>
-                <input name="search" value="{{ request('search') }}" type="text" placeholder="Cari pelanggan, proyek..."
-                       style="width:100%;padding:9px 12px 9px 34px;">
-            </div>
-            <select name="status" onchange="this.form.submit()" style="padding:9px 12px;">
-                <option value="">Semua Status</option>
-                <option value="active"    {{ request('status')==='active'    ? 'selected':'' }}>Aktif</option>
-                <option value="expired"   {{ request('status')==='expired'   ? 'selected':'' }}>Expired</option>
-                <option value="cancelled" {{ request('status')==='cancelled' ? 'selected':'' }}>Dibatalkan</option>
-            </select>
-            <button type="submit" class="btn-nb btn-secondary">Cari</button>
-            @if(request('search') || request('status'))
-                <a href="{{ route('subscriptions.index') }}" class="btn-nb btn-secondary">✕ Reset</a>
-            @endif
-        </form>
+    <div class="nb-toolbar">
+        <div class="nb-toolbar-left">
+            <form method="GET" action="{{ route('subscriptions.index') }}"
+                  style="display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap;">
+                <div style="position:relative;">
+                    <i class="ti ti-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;"></i>
+                    <input name="search" value="{{ request('search') }}" type="text" placeholder="Cari pelanggan, proyek..."
+                           style="padding-left:40px;width:240px;">
+                </div>
+                <select name="status" onchange="this.form.submit()" style="width:155px;">
+                    <option value="">Semua Status</option>
+                    <option value="active"    {{ request('status')==='active'    ? 'selected':'' }}>Aktif</option>
+                    <option value="expired"   {{ request('status')==='expired'   ? 'selected':'' }}>Expired</option>
+                    <option value="cancelled" {{ request('status')==='cancelled' ? 'selected':'' }}>Dibatalkan</option>
+                </select>
+                <button type="submit" class="btn-nb btn-secondary">Cari</button>
+                @if(request('search') || request('status'))
+                    <a href="{{ route('subscriptions.index') }}" class="btn-nb btn-secondary">✕ Reset</a>
+                @endif
+            </form>
+        </div>
         <a href="{{ route('subscriptions.create') }}" class="btn-nb btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:14px;height:14px;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-            </svg>
-            Tambah
+            <i class="ti ti-plus"></i>
+            Tambah Subscription
         </a>
     </div>
 
@@ -118,14 +115,14 @@
                             </td>
                             <td style="text-align:right;">
                                 <div style="display:inline-flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
-                                    <a href="{{ route('subscriptions.show', $sub) }}" class="btn-nb btn-secondary" style="padding:5px 8px;font-size:11px;">Detail</a>
-                                    <a href="{{ route('subscriptions.edit', $sub) }}" class="btn-nb btn-blue" style="padding:5px 8px;font-size:11px;">Edit</a>
+                                    <a href="{{ route('subscriptions.show', $sub) }}" class="btn-nb btn-secondary btn-sm">Detail</a>
+                                    <a href="{{ route('subscriptions.edit', $sub) }}" class="btn-nb btn-blue btn-sm">Edit</a>
                                     <button @click="showRenewModal=true;renewId={{ $sub->id }};renewName='{{ addslashes($sub->customer->name) }}'"
-                                            class="btn-nb btn-lime" style="padding:5px 8px;font-size:11px;">↻ Perpanjang</button>
+                                            class="btn-nb btn-lime btn-sm"><i class="ti ti-refresh"></i> Perpanjang</button>
                                     <form method="POST" action="{{ route('subscriptions.destroy', $sub) }}"
                                           onsubmit="return confirm('Hapus subscription ini?')" style="display:inline;">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn-nb btn-danger" style="padding:5px 8px;font-size:11px;">Hapus</button>
+                                        <button type="submit" class="btn-nb btn-danger btn-sm">Hapus</button>
                                     </form>
                                 </div>
                             </td>
@@ -142,18 +139,18 @@
             </table>
         </div>
         @if($subscriptions->hasPages())
-            <div style="padding:12px 16px;border-top:2px solid #000;background:#FFFBF0;display:flex;align-items:center;justify-content:space-between;">
+            <div style="padding:14px 18px;border-top:2.5px solid #000;background:#FFFBF0;display:flex;align-items:center;justify-content:space-between;">
                 <span style="font-size:11px;color:#555;font-family:'Space Mono',monospace;">{{ $subscriptions->firstItem() }}–{{ $subscriptions->lastItem() }} dari {{ $subscriptions->total() }}</span>
                 <div style="display:flex;gap:6px;">
                     @if($subscriptions->onFirstPage())
-                        <span style="padding:5px 12px;border:2px solid #ccc;font-size:12px;color:#ccc;cursor:default;">‹</span>
+                        <span class="btn-nb btn-secondary btn-sm" style="opacity:0.4;cursor:default;">‹ Prev</span>
                     @else
-                        <a href="{{ $subscriptions->previousPageUrl() }}" class="btn-nb btn-secondary" style="padding:5px 12px;font-size:12px;">‹</a>
+                        <a href="{{ $subscriptions->previousPageUrl() }}" class="btn-nb btn-secondary btn-sm">‹ Prev</a>
                     @endif
                     @if($subscriptions->hasMorePages())
-                        <a href="{{ $subscriptions->nextPageUrl() }}" class="btn-nb btn-secondary" style="padding:5px 12px;font-size:12px;">›</a>
+                        <a href="{{ $subscriptions->nextPageUrl() }}" class="btn-nb btn-secondary btn-sm">Next ›</a>
                     @else
-                        <span style="padding:5px 12px;border:2px solid #ccc;font-size:12px;color:#ccc;cursor:default;">›</span>
+                        <span class="btn-nb btn-secondary btn-sm" style="opacity:0.4;cursor:default;">Next ›</span>
                     @endif
                 </div>
             </div>
